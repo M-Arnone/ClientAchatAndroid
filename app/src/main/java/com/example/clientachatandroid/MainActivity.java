@@ -4,15 +4,20 @@ import android.os.Bundle;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import androidx.core.view.WindowCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.clientachatandroid.databinding.ActivityMainBinding;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.preference.PreferenceManager;
+import android.view.MenuItem;
 
 import android.view.Menu;
-import android.view.MenuItem;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,10 +63,43 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            changeLanguage();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void changeLanguage() {
+        // Obtenez l'objet Resources pour accéder aux ressources de l'application
+        Resources resources = getResources();
+
+        // Obtenir la configuration actuelle
+        Configuration configuration = resources.getConfiguration();
+
+        // Changer la locale en français si elle est actuellement en anglais, et vice versa
+        if (configuration.locale.getLanguage().equals("en")) {
+            setLocale("fr");
+        } else {
+            setLocale("en");
+        }
+
+        // Rafraîchir l'affichage de l'activité actuelle
+        recreate();
+    }
+
+    private void setLocale(String languageCode) {
+        // Changer la locale de l'application
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+        // Enregistrer la langue sélectionnée dans les préférences partagées (si nécessaire)
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString("language", languageCode);
+        editor.apply();
     }
 
     @Override
