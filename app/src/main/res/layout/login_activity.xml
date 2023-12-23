@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- res/layout/activity_login.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/login_background"
+                tools:context=".LoginActivity"
+                android:gravity="center"
+                android:padding="16dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+        <ImageView
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:src="@drawable/icon_account"/>
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                android:padding="18dp"
+                android:background="@drawable/rounded_corner"
+                android:inputType="text"
+                android:id="@+id/username_input"
+                android:layout_marginTop="32dp"/>
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="20sp"
+                android:padding="18dp"
+                android:background="@drawable/rounded_corner"
+                android:inputType="text"
+                android:id="@+id/password_input"
+                android:layout_marginTop="32dp"/>
+
+        <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:layout_centerInParent="true"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/loginBlue"
+                android:padding="18dp"
+                android:layout_marginTop="32dp"
+                android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <!-- Other UI elements for login screen -->
+
+
+</RelativeLayout>
