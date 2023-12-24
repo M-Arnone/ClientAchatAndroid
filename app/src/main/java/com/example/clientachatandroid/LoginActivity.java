@@ -1,6 +1,7 @@
 package com.example.clientachatandroid;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class LoginActivity extends AppCompatActivity {
+    Model m;
     private LoginActivityBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,22 +21,38 @@ public class LoginActivity extends AppCompatActivity {
         binding = LoginActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         try {
-            Model m = Model.getInstance(getApplicationContext());
+            m = Model.getInstance(getApplicationContext());
         } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
 
-
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                startActivity(intent);
-                String text = "username:" + binding.usernameInput.getText() + "\nmdp:" + binding.passwordInput.getText();
-                Log.d("tag", text);
+
+                new LoginTask().execute(binding.usernameInput.getText().toString(), binding.passwordInput.getText().toString());
             }
         });
 
+    }
+    private class LoginTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                m.on_pushLogin(params[0], params[1], false);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            // Rediriger vers l'activité principale après la connexion réussie
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 }
