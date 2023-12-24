@@ -254,7 +254,7 @@ public class Model  {
     }
     @SuppressLint("StaticFieldLeak")
     public Model(Context c1) throws IOException {
-        this.context = c1;
+        this.context = c1.getApplicationContext();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
