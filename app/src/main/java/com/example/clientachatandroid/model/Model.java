@@ -19,6 +19,8 @@ public class Model {
     private Socket sClient;
     private String _requete;
     private ConfigReader cg;
+    int numArticle = 1;
+    int numClient;
 
     Context context;
     private ArrayList<Article> panier = new ArrayList<>();
@@ -55,8 +57,11 @@ public class Model {
         return numArticle;
     }
 
-    int numArticle = 1;
-    int numClient;
+    public void setNumArticle(int numArticle) {
+        this.numArticle = numArticle;
+    }
+
+
 
 
     public String getRequete() {
@@ -67,6 +72,15 @@ public class Model {
         this._requete = _requete;
     }
 
+    public Article getArticleActuel() {
+        // Appelez votre méthode pour récupérer l'article actuel
+        try {
+            return setArticle(numArticle);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public void on_pushLogin(String nom, String pwd, boolean newClient) throws IOException {
         if (newClient)
