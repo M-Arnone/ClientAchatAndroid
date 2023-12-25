@@ -2,7 +2,6 @@ package com.example.clientachatandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.clientachatandroid.databinding.LoginActivityBinding;
 import com.example.clientachatandroid.model.Model;
