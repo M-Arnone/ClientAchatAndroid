@@ -1,6 +1,7 @@
 package com.example.clientachatandroid;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements NetworkManager.On
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolbar);
         try {
             NetworkManager networkManager = new NetworkManager(getApplicationContext());
             networkManager.fetchArticleAsync(1, this);
@@ -58,9 +61,8 @@ public class MainActivity extends AppCompatActivity implements NetworkManager.On
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                startActivity(intent);
             }
         });
     }

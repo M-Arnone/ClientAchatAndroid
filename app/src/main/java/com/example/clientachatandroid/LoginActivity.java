@@ -34,8 +34,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 networkManager.performLoginAsync(
-                        binding.usernameInput.getText().toString(),
-                        binding.passwordInput.getText().toString(),
+//                        binding.usernameInput.getText().toString(),
+//                        binding.passwordInput.getText().toString(),
+                        "Alex",
+                        "abc123",
                         () -> {
                             // Rediriger vers l'activité principale après la connexion réussie
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
