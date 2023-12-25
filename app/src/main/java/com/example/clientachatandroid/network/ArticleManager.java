@@ -1,5 +1,4 @@
 package com.example.clientachatandroid.network;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import com.example.clientachatandroid.model.Article;
@@ -8,44 +7,12 @@ import com.example.clientachatandroid.model.Model;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class NetworkManager {
+public class ArticleManager {
 
-    private Context applicationContext;
-    private Model m;
+    private Model model;
 
-
-    public NetworkManager(Context applicationContext) throws SQLException, IOException, ClassNotFoundException {
-        this.applicationContext = applicationContext;
-        m = Model.getInstance(applicationContext);
-    }
-
-    public void performLoginAsync(String username, String password, OnLoginCompleteListener listener) {
-        new LoginTask(listener).execute(username, password);
-    }
-
-    private class LoginTask extends AsyncTask<String, Void, Void> {
-        private final OnLoginCompleteListener listener;
-
-        public LoginTask(OnLoginCompleteListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-                m.on_pushLogin(params[0], params[1], false);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            //Boolean.parseBoolean(params[2])
-
-            // À la fin, appeler la méthode de l'interface lorsque l'opération est terminée
-            if (listener != null) {
-                listener.onLoginComplete();
-            }
-
-            return null;
-        }
+    public ArticleManager(Context context) throws SQLException, IOException, ClassNotFoundException {
+        this.model = Model.getInstance(context);
     }
 
     public void fetchArticleAsync(int articleId, OnArticleFetchListener listener) {
@@ -63,8 +30,9 @@ public class NetworkManager {
         protected Article doInBackground(Integer... params) {
             try {
                 // Effectuez vos opérations réseau ici (ex. récupérer l'article du serveur)
-                return m.setArticle(params[0]);
+                return model.setArticle(params[0]);
             } catch (Exception e) {
+                // Gérer l'erreur de manière appropriée (affichage à l'utilisateur, journalisation, etc.)
                 e.printStackTrace();
                 return null;
             }
@@ -83,12 +51,7 @@ public class NetworkManager {
         }
     }
 
-
-
-    // Interface pour écouter la fin du login
-    public interface OnLoginCompleteListener {
-        void onLoginComplete();
-    }
+    // Interface pour écouter la fin de la récupération d'article
     public interface OnArticleFetchListener {
         void onArticleFetched(Article article);
         void onArticleFetchError(String errorMessage);

@@ -1,16 +1,12 @@
 package com.example.clientachatandroid;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 import com.example.clientachatandroid.model.Article;
 import com.example.clientachatandroid.model.Model;
-import com.example.clientachatandroid.network.NetworkManager;
+import com.example.clientachatandroid.network.ArticleAcheterManager;
+import com.example.clientachatandroid.network.ArticleManager;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -30,16 +26,16 @@ import android.view.Menu;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements NetworkManager.OnArticleFetchListener {
+public class MainActivity extends AppCompatActivity implements ArticleManager.OnArticleFetchListener {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     private Article a;
-    Model m;
+    Model m ;
+    ArticleManager articleManager;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -48,9 +44,14 @@ public class MainActivity extends AppCompatActivity implements NetworkManager.On
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Button suivantButton = findViewById(R.id.suivantButton);
+        Button precedentButton = findViewById(R.id.precedentButton);
+        Button acheterButton = findViewById(R.id.acheterButton);
         try {
-            NetworkManager networkManager = new NetworkManager(getApplicationContext());
-            networkManager.fetchArticleAsync(1, this);
+            m = Model.getInstance(getApplicationContext());
+            articleManager = new ArticleManager(getApplicationContext());
+            articleManager.fetchArticleAsync(m.getNumArticle(), this);
 
         } catch (SQLException | ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
@@ -63,6 +64,60 @@ public class MainActivity extends AppCompatActivity implements NetworkManager.On
                         .setAction("Action", null).show();
             }
         });
+
+        suivantButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Incrémentez l'ID de l'article et fetch l'article suivant
+                if(m.getNumArticle() <= 21) {
+                    m.setNumArticle(m.getNumArticle()+1);
+                    articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
+                }
+                else{
+                    Snackbar.make(v, "Vous êtes sur le dernier article", Snackbar.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        precedentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (m.getNumArticle() > 1) {
+                    m.setNumArticle(m.getNumArticle()-1);
+                    articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
+                } else {
+                    Snackbar.make(v, "Vous êtes déjà sur le premier article", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
+        try {
+            ArticleAcheterManager articleAcheterManager = new ArticleAcheterManager(getApplicationContext());
+            acheterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Spinner quantiteSpinner = findViewById(R.id.quantiteSpinner);
+                    int quantite = (int) quantiteSpinner.getSelectedItem();
+
+                    articleAcheterManager.acheterArticleAsync(quantite, new ArticleAcheterManager.OnAchatListener() {
+                        @Override
+                        public void onAchatSuccess() {
+                            Toast.makeText(MainActivity.this, "Article acheté", Toast.LENGTH_SHORT).show();
+                            articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
+                        }
+
+                        @Override
+                        public void onAchatError(String errorMessage) {
+                            // Gérer l'erreur d'achat (affichage à l'utilisateur, journalisation, etc.)
+                        }
+                    });
+                }
+            });
+        } catch (IOException | SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     @Override
@@ -150,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements NetworkManager.On
         String nomArticle = article.getNom();
 
         String nomImage = nomArticle.toLowerCase(); // Assurez-vous que nomArticle ne contient pas d'espaces ni de caractères spéciaux
+        System.out.println("Nom de l'image :" + nomImage);
+        if(nomImage.equals("pommes de terre") )
+            nomImage = "pommesdeterre";
         int imageResource = getResources().getIdentifier(nomImage, "drawable", getPackageName());
         articleImageView.setImageResource(imageResource);
 

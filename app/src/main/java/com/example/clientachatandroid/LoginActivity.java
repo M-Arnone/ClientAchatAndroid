@@ -1,14 +1,12 @@
 package com.example.clientachatandroid;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.clientachatandroid.databinding.LoginActivityBinding;
 import com.example.clientachatandroid.model.Model;
-import com.example.clientachatandroid.network.NetworkManager;
+import com.example.clientachatandroid.network.LoginManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,7 +14,7 @@ import java.sql.SQLException;
 public class LoginActivity extends AppCompatActivity {
     Model m;
     private LoginActivityBinding binding;
-    NetworkManager networkManager = null;
+    LoginManager lm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         try {
             m = Model.getInstance(getApplicationContext());
-            networkManager = new NetworkManager(getApplicationContext());
+            lm = new LoginManager(getApplicationContext());
         } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -33,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                networkManager.performLoginAsync(
+                lm.performLoginAsync(
                         binding.usernameInput.getText().toString(),
                         binding.passwordInput.getText().toString(),
                         () -> {
