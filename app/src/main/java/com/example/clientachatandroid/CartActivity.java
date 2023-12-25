@@ -30,25 +30,25 @@ public class CartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-//        try {
-//            panier = Model.getInstance(null).getPanier();
-//        } catch (SQLException | ClassNotFoundException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            panier = Model.getInstance(null).getPanier();
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
         // Add articles to your cart as needed
-        panier.add(new Article(1, "Article 1", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
-        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(1, "Article 1", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
+//        panier.add(new Article(2, "Article 2", 29.99, 2));
 
         // Initialize RecyclerView and Adapter
         RecyclerView recyclerView = findViewById(R.id.recyclerView);

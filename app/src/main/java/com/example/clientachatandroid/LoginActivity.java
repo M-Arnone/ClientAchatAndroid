@@ -15,6 +15,7 @@ public class LoginActivity extends AppCompatActivity {
     Model m;
     private LoginActivityBinding binding;
     LoginManager lm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,20 +29,17 @@ public class LoginActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lm.performLoginAsync(
-                        binding.usernameInput.getText().toString(),
-                        binding.passwordInput.getText().toString(),
-                        () -> {
-                            // Rediriger vers l'activité principale après la connexion réussie
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        }
-                );
-            }
-        });
+        binding.btnLogin.setOnClickListener(view -> lm.performLoginAsync(
+//                        binding.usernameInput.getText().toString(),
+//                        binding.passwordInput.getText().toString(),
+                "Alex",
+                "abc123",
+                () -> {
+                    // Rediriger vers l'activité principale après la connexion réussie
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+        ));
 
     }
 

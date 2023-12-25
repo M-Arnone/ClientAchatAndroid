@@ -2,7 +2,6 @@ package com.example.clientachatandroid;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.*;
 import com.example.clientachatandroid.model.Article;
@@ -11,7 +10,6 @@ import com.example.clientachatandroid.network.ArticleAcheterManager;
 import com.example.clientachatandroid.network.ArticleManager;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -35,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements ArticleManager.On
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private Article a;
     Model m ;
     ArticleManager articleManager;
 
@@ -60,61 +57,49 @@ public class MainActivity extends AppCompatActivity implements ArticleManager.On
         } catch (SQLException | ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
         }
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CartActivity.class);
-                startActivity(intent);
-            }
+        binding.fab.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, CartActivity.class);
+            startActivity(intent);
         });
 
-        suivantButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Incrémentez l'ID de l'article et fetch l'article suivant
-                if(m.getNumArticle() <= 21) {
-                    m.setNumArticle(m.getNumArticle()+1);
-                    articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
-                }
-                else{
-                    Snackbar.make(v, "Vous êtes sur le dernier article", Snackbar.LENGTH_SHORT).show();
-                }
-
+        suivantButton.setOnClickListener(v -> {
+            // Incrémentez l'ID de l'article et fetch l'article suivant
+            if(m.getNumArticle() < 21) {
+                m.setNumArticle(m.getNumArticle()+1);
+                articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
             }
+            else{
+                Snackbar.make(v, "Vous êtes sur le dernier article", Snackbar.LENGTH_SHORT).show();
+            }
+
         });
 
-        precedentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (m.getNumArticle() > 1) {
-                    m.setNumArticle(m.getNumArticle()-1);
-                    articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
-                } else {
-                    Snackbar.make(v, "Vous êtes déjà sur le premier article", Snackbar.LENGTH_SHORT).show();
-                }
+        precedentButton.setOnClickListener(v -> {
+            if (m.getNumArticle() > 1) {
+                m.setNumArticle(m.getNumArticle()-1);
+                articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
+            } else {
+                Snackbar.make(v, "Vous êtes déjà sur le premier article", Snackbar.LENGTH_SHORT).show();
             }
         });
         try {
             ArticleAcheterManager articleAcheterManager = new ArticleAcheterManager(getApplicationContext());
-            acheterButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Spinner quantiteSpinner = findViewById(R.id.quantiteSpinner);
-                    int quantite = (int) quantiteSpinner.getSelectedItem();
+            acheterButton.setOnClickListener(v -> {
+                Spinner quantiteSpinner = findViewById(R.id.quantiteSpinner);
+                int quantite = (int) quantiteSpinner.getSelectedItem();
 
-                    articleAcheterManager.acheterArticleAsync(quantite, new ArticleAcheterManager.OnAchatListener() {
-                        @Override
-                        public void onAchatSuccess() {
-                            Toast.makeText(MainActivity.this, "Article acheté", Toast.LENGTH_SHORT).show();
-                            articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
-                        }
+                articleAcheterManager.acheterArticleAsync(quantite, new ArticleAcheterManager.OnAchatListener() {
+                    @Override
+                    public void onAchatSuccess() {
+                        Toast.makeText(MainActivity.this, "Article acheté", Toast.LENGTH_SHORT).show();
+                        articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
+                    }
 
-                        @Override
-                        public void onAchatError(String errorMessage) {
-                            // Gérer l'erreur d'achat (affichage à l'utilisateur, journalisation, etc.)
-                        }
-                    });
-                }
+                    @Override
+                    public void onAchatError(String errorMessage) {
+                        // Gérer l'erreur d'achat (affichage à l'utilisateur, journalisation, etc.)
+                    }
+                });
             });
         } catch (IOException | SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -207,8 +192,7 @@ public class MainActivity extends AppCompatActivity implements ArticleManager.On
 
         String nomArticle = article.getNom();
 
-        String nomImage = nomArticle.toLowerCase(); // Assurez-vous que nomArticle ne contient pas d'espaces ni de caractères spéciaux
-        System.out.println("Nom de l'image :" + nomImage);
+        String nomImage = nomArticle.toLowerCase();
         if(nomImage.equals("pommes de terre") )
             nomImage = "pommesdeterre";
         int imageResource = getResources().getIdentifier(nomImage, "drawable", getPackageName());
