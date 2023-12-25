@@ -1,7 +1,6 @@
 package com.example.clientachatandroid.model;
 
 
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -13,7 +12,7 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Model  {
+public class Model {
     public static volatile Model instance;
     private DataOutputStream dos;
     private DataInputStream dis;
@@ -28,24 +27,22 @@ public class Model  {
         return panier;
     }
 
-    public void addArt(Article A){
+    public void addArt(Article A) {
         Article addTemp = new Article();
         boolean trouve = false;
-        for (int i = 0;( getPanier() != null && getPanier().size() > i ) && trouve == false; i++) {
-            if(getPanier().get(i).getId() == A.getId())
-            {
+        for (int i = 0; (getPanier() != null && getPanier().size() > i) && trouve == false; i++) {
+            if (getPanier().get(i).getId() == A.getId()) {
                 addTemp = getPanier().get(i);
-                addTemp.setQuantite(addTemp.getQuantite()+ A.getQuantite());
+                addTemp.setQuantite(addTemp.getQuantite() + A.getQuantite());
                 trouve = true;
             }
         }
 
-        if (trouve == false)
-        {
+        if (trouve == false) {
             getPanier().add(A);
         }
 
-        for (int i = 0; getPanier() != null && getPanier().size() > i ; i++) {
+        for (int i = 0; getPanier() != null && getPanier().size() > i; i++) {
             System.out.println("Panier client " + i + ":" + getPanier().get(i));
         }
     }
@@ -71,8 +68,8 @@ public class Model  {
     }
 
 
-    public void on_pushLogin(String nom, String pwd,boolean newClient) throws IOException {
-        if(newClient)
+    public void on_pushLogin(String nom, String pwd, boolean newClient) throws IOException {
+        if (newClient)
             setRequete("LOGIN#" + nom + "#" + pwd + "#1");
         else setRequete("LOGIN#" + nom + "#" + pwd + "#0");
         String reponse = Echange(getRequete());
@@ -80,6 +77,7 @@ public class Model  {
         numClient = Integer.parseInt(mots[2]);
         setArticle(numArticle);
     }
+
     public void on_pushLogout() throws IOException {
         setRequete("LOGOUT#oui");
         Echange(getRequete());
@@ -90,7 +88,7 @@ public class Model  {
         return setArticle(numArticle);
     }
 
-    public Article on_pushPrecedent() throws IOException{
+    public Article on_pushPrecedent() throws IOException {
         numArticle--;
         return setArticle(numArticle);
     }
@@ -98,49 +96,46 @@ public class Model  {
     public void on_pushAcheter(int quantite) throws IOException {
         System.out.println("NUM ARTICLE : " + numArticle);
         System.out.println("Quantite : " + quantite);
-        setRequete("ACHAT#" + numArticle +"#" + quantite);
+        setRequete("ACHAT#" + numArticle + "#" + quantite);
         String reponse = Echange(getRequete());
         String[] mots = reponse.split("#");
-        if(mots[1].equals("ok")){
-            Article a = new Article(numArticle,mots[2], Double.parseDouble(mots[3]),quantite);
+        if (mots[1].equals("ok")) {
+            Article a = new Article(numArticle, mots[2], Double.parseDouble(mots[3]), quantite);
             addArt(a);
-        }
-        else System.err.println("Erreur d'achat !!");
+        } else System.err.println("Erreur d'achat !!");
 
     }
-    public void on_pushSupprimerArticle(int id) throws IOException{
+
+    public void on_pushSupprimerArticle(int id) throws IOException {
         setRequete("CANCEL#" + id);
         String reponse = Echange(getRequete());
         String[] mots = reponse.split("#");
-        if(mots[1].equals("ok"))
-        {
+        if (mots[1].equals("ok")) {
             for (Article artPass : getPanier()) {
-                if(artPass.getId() == id)
-                {
+                if (artPass.getId() == id) {
                     getPanier().remove(artPass);
                     return;
                 }
             }
-        }
-        else System.out.println("Erreur de suppression!!!");
+        } else System.out.println("Erreur de suppression!!!");
 
     }
-    public void on_pushViderPanier() throws IOException{
+
+    public void on_pushViderPanier() throws IOException {
         setRequete("CANCELALL");
         String reponse = Echange(getRequete());
         String[] mots = reponse.split("#");
-        if(mots[1].equals("ok"))
-        {
+        if (mots[1].equals("ok")) {
             getPanier().clear();
             System.out.println("CANCELALL_OK");
         }
     }
-    public void on_pushPayer(String total) throws IOException{
-        setRequete("CONFIRMER#"+numClient+"#"+total);
+
+    public void on_pushPayer(String total) throws IOException {
+        setRequete("CONFIRMER#" + numClient + "#" + total);
         String reponse = Echange(getRequete());
         String[] mots = reponse.split("#");
-        if(mots[1].equals("ok"))
-        {
+        if (mots[1].equals("ok")) {
             getPanier().clear();
             System.out.println("Confirm_OK");
         }
@@ -168,7 +163,7 @@ public class Model  {
     }
 
 
-    private void Send (String r) throws IOException {
+    private void Send(String r) throws IOException {
         try {
             r += "#)";
             dos.write(r.getBytes());
@@ -178,6 +173,7 @@ public class Model  {
             throw e;
         }
     }
+
     private String Receive() throws IOException {
         StringBuilder data = new StringBuilder();
         boolean finished = false;
@@ -203,26 +199,27 @@ public class Model  {
         return data.toString();
     }
 
-    public void connectToServer() throws IOException{
-        try{
+    public void connectToServer() throws IOException {
+        try {
             ConfigReader cg = new ConfigReader(context);
             System.out.println("PORT : " + cg.getPort());
-            sClient = new Socket(cg.getServerIP(),cg.getPort());
+            sClient = new Socket(cg.getServerIP(), cg.getPort());
             dos = new DataOutputStream(sClient.getOutputStream());
             dis = new DataInputStream(sClient.getInputStream());
-        }catch (IOException e){
-            System.out.println("Erreur : " +e);
+        } catch (IOException e) {
+            System.out.println("Erreur : " + e);
             throw e;
         }
 
     }
+
     public Article setArticle(int num) throws IOException {
         String reponse = null;
         Article a = null;
-        setRequete("CONSULT#"+num);
-        try{
-            reponse=Echange(getRequete());
-        }catch (IOException ex){
+        setRequete("CONSULT#" + num);
+        try {
+            reponse = Echange(getRequete());
+        } catch (IOException ex) {
             System.err.println("Erreur d'Echange - Consult : " + ex.getMessage());
         }
         String[] infos = reponse.split("#");
@@ -234,7 +231,7 @@ public class Model  {
             int quantite = Integer.parseInt(infos[5]);
             String nomFichierImage = infos[6];
 
-            a = new Article(nomArticle,prix,quantite,nomFichierImage);
+            a = new Article(nomArticle, prix, quantite, nomFichierImage);
 
         } else {
             System.err.println("Réponse mal formée");
@@ -242,16 +239,18 @@ public class Model  {
         return a;
 
     }
+
     public static Model getInstance(Context c) throws SQLException, ClassNotFoundException, IOException {
-        if(instance == null){
-            synchronized (Model.class){
-                if(instance == null){
+        if (instance == null) {
+            synchronized (Model.class) {
+                if (instance == null) {
                     instance = new Model(c);
                 }
             }
         }
         return instance;
     }
+
     @SuppressLint("StaticFieldLeak")
     public Model(Context c1) throws IOException {
         this.context = c1.getApplicationContext();
@@ -267,7 +266,6 @@ public class Model  {
             }
         }.execute();
     }
-
 
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
