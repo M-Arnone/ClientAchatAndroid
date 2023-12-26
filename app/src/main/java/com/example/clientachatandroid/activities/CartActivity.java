@@ -57,7 +57,7 @@ public class CartActivity extends MenuActivity {
     }
 
     private void payCart() {
-        new PayAsyncTask(adapter, computeTotal()).execute();
+        new PayAsyncTask(adapter, computeTotal(), getApplicationContext()).execute();
     }
 
     private double computeTotal() {

@@ -4,9 +4,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="cart_name">Cart</string>
-    <string name="article_name">Name</string>
-    <string name="price">Price by unit</string>
-    <string name="Stock">Stock</string>
     <string name="buy">Buy</string>
     <string name="empty_cart">Empty Cart</string>
     <string name="pay">Pay</string>

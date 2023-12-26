@@ -94,14 +94,18 @@ public class Model {
         System.out.println(panier);
     }
 
-    public void on_pushLogin(String nom, String pwd, boolean newClient) throws IOException {
+    public boolean on_pushLogin(String nom, String pwd, boolean newClient) throws IOException {
         if (newClient)
             setRequete("LOGIN#" + nom + "#" + pwd + "#1");
         else setRequete("LOGIN#" + nom + "#" + pwd + "#0");
         String reponse = Echange(getRequete());
+        if (reponse.contains("ko"))
+            return false;
+
         String[] mots = reponse.split("#");
         numClient = Integer.parseInt(mots[2]);
         setArticle(numArticle);
+        return true;
     }
 
     public void on_pushLogout() throws IOException {

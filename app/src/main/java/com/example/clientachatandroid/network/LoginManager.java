@@ -1,9 +1,12 @@
 package com.example.clientachatandroid.network;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import com.example.clientachatandroid.model.Model;
+
 import java.io.IOException;
 import java.sql.SQLException;
+
 public class LoginManager {
 
     private Context context;
@@ -27,24 +30,33 @@ public class LoginManager {
 
         @Override
         protected Void doInBackground(String... params) {
-            try {
-                model.on_pushLogin(params[0], params[1], false);
-            } catch (IOException e) {
-                // Gérer l'erreur de manière appropriée (affichage à l'utilisateur, journalisation, etc.)
-                e.printStackTrace();
+            boolean success = false;
+
+            if (params[0] == null || params[0].equals("") || params[1] == null || params[1].equals("")){
+                listener.onLoginFailed();
+                return null;
             }
 
-            // À la fin, appeler la méthode de l'interface lorsque l'opération est terminée
+                try {
+                    success = model.on_pushLogin(params[0], params[1], false);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             if (listener != null) {
-                listener.onLoginComplete();
+                if (success)
+                    listener.onLoginComplete();
+                else
+                    listener.onLoginFailed();
             }
 
             return null;
         }
     }
 
-    // Interface pour écouter la fin du login
     public interface OnLoginCompleteListener {
         void onLoginComplete();
+
+        void onLoginFailed();
     }
 }

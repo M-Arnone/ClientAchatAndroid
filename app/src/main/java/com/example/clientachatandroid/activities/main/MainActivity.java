@@ -109,9 +109,18 @@ public class MainActivity extends MenuActivity implements ArticleManager.OnArtic
         TextView prixUnitaireTextView = findViewById(R.id.prixUnitaireTextView);
         TextView stockTextView = findViewById(R.id.stockTextView);
 
+        String price;
+        String units;
+        if(getResources().getConfiguration().locale.getLanguage().equals("en")){
+            price = "Price by unit ";
+            units = "units";
+        }else {
+            price = "Prix à l'unité ";
+            units = "unités";
+        }
         nomArticleTextView.setText(article.getNom());
-        prixUnitaireTextView.setText(String.format("Prix : %.2f €", article.getPrix()));
-        stockTextView.setText(String.format("Stock : %d unités", article.getQuantite()));
+        prixUnitaireTextView.setText(price+String.format("%.2f €", article.getPrix()));
+        stockTextView.setText(String.format("Stock : %d ", article.getQuantite())+units);
 
         String nomArticle = article.getNom();
 
