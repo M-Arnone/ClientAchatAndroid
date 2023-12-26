@@ -1,8 +1,9 @@
-package com.example.clientachatandroid;
+package com.example.clientachatandroid.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.clientachatandroid.activities.main.MainActivity;
 import com.example.clientachatandroid.databinding.LoginActivityBinding;
 import com.example.clientachatandroid.model.Model;
 import com.example.clientachatandroid.network.LoginManager;
@@ -24,15 +25,14 @@ public class LoginActivity extends AppCompatActivity {
             m = Model.getInstance(getApplicationContext());
             lm = new LoginManager(getApplicationContext());
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
         binding.btnLogin.setOnClickListener(view -> lm.performLoginAsync(
 //                        binding.usernameInput.getText().toString(),
 //                        binding.passwordInput.getText().toString(),
-                "Alex",
-                "abc123",
+                "w",
+                "1",
                 () -> {
                     // Rediriger vers l'activité principale après la connexion réussie
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);

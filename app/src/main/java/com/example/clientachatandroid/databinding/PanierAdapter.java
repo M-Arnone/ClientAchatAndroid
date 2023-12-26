@@ -1,4 +1,4 @@
-package com.example.clientachatandroid;
+package com.example.clientachatandroid.databinding;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,25 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.clientachatandroid.R;
 import com.example.clientachatandroid.model.Article;
+import com.example.clientachatandroid.network.CancelAsyncTask;
 
 import java.util.List;
 
 public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.ArticleViewHolder> {
-    private List<Article> articles;
-    private OnItemClickListener listener;
-
-    // Constructeur, méthodes pour ajouter/supprimer des articles, etc.
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-
-        void onDeleteClick(int position);
-    }
-
+    private final List<Article> articles;
     // Constructeur de l'adaptateur
-    public PanierAdapter(List<Article> articles, OnItemClickListener listener) {
+    public PanierAdapter(List<Article> articles) {
         this.articles = articles;
-        this.listener = listener;
     }
 
     static class ArticleViewHolder extends RecyclerView.ViewHolder {
@@ -62,8 +52,8 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.ArticleVie
 
         holder.deleteButton.setOnClickListener(view -> {
             // Supprimez l'article à la position donnée
-            articles.remove(position);
-            notifyItemRemoved(position);
+            System.out.println(article.getId());
+            new CancelAsyncTask(this, article.getId()).execute();
         });
     }
 

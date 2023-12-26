@@ -1,39 +1,27 @@
-package com.example.clientachatandroid;
+package com.example.clientachatandroid.activities.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.*;
+import com.example.clientachatandroid.activities.CartActivity;
+import com.example.clientachatandroid.activities.MenuActivity;
+import com.example.clientachatandroid.R;
 import com.example.clientachatandroid.model.Article;
 import com.example.clientachatandroid.model.Model;
 import com.example.clientachatandroid.network.ArticleAcheterManager;
 import com.example.clientachatandroid.network.ArticleManager;
 import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import com.example.clientachatandroid.databinding.ActivityMainBinding;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.preference.PreferenceManager;
-import android.view.MenuItem;
-
-import android.view.Menu;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements ArticleManager.OnArticleFetchListener {
-
-    private AppBarConfiguration appBarConfiguration;
+public class MainActivity extends MenuActivity implements ArticleManager.OnArticleFetchListener {
     private ActivityMainBinding binding;
-    Model m ;
+    Model m;
     ArticleManager articleManager;
 
     @SuppressLint("DefaultLocale")
@@ -64,11 +52,10 @@ public class MainActivity extends AppCompatActivity implements ArticleManager.On
 
         suivantButton.setOnClickListener(v -> {
             // Incrémentez l'ID de l'article et fetch l'article suivant
-            if(m.getNumArticle() < 21) {
-                m.setNumArticle(m.getNumArticle()+1);
+            if (m.getNumArticle() < 21) {
+                m.setNumArticle(m.getNumArticle() + 1);
                 articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
-            }
-            else{
+            } else {
                 Snackbar.make(v, "Vous êtes sur le dernier article", Snackbar.LENGTH_SHORT).show();
             }
 
@@ -76,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements ArticleManager.On
 
         precedentButton.setOnClickListener(v -> {
             if (m.getNumArticle() > 1) {
-                m.setNumArticle(m.getNumArticle()-1);
+                m.setNumArticle(m.getNumArticle() - 1);
                 articleManager.fetchArticleAsync(m.getNumArticle(), MainActivity.this);
             } else {
                 Snackbar.make(v, "Vous êtes déjà sur le premier article", Snackbar.LENGTH_SHORT).show();
@@ -104,70 +91,6 @@ public class MainActivity extends AppCompatActivity implements ArticleManager.On
         } catch (IOException | SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            changeLanguage();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void changeLanguage() {
-        // Obtenez l'objet Resources pour accéder aux ressources de l'application
-        Resources resources = getResources();
-
-        // Obtenir la configuration actuelle
-        Configuration configuration = resources.getConfiguration();
-
-        // Changer la locale en français si elle est actuellement en anglais, et vice versa
-        if (configuration.locale.getLanguage().equals("en")) {
-            setLocale("fr");
-        } else {
-            setLocale("en");
-        }
-
-        // Rafraîchir l'affichage de l'activité actuelle
-        recreate();
-    }
-
-    private void setLocale(String languageCode) {
-        // Changer la locale de l'application
-        Locale locale = new Locale(languageCode);
-        Locale.setDefault(locale);
-        Configuration configuration = new Configuration();
-        configuration.locale = locale;
-        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-
-        // Enregistrer la langue sélectionnée dans les préférences partagées (si nécessaire)
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString("language", languageCode);
-        editor.apply();
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 
     @Override
@@ -193,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements ArticleManager.On
         String nomArticle = article.getNom();
 
         String nomImage = nomArticle.toLowerCase();
-        if(nomImage.equals("pommes de terre") )
+        if (nomImage.equals("pommes de terre"))
             nomImage = "pommesdeterre";
         int imageResource = getResources().getIdentifier(nomImage, "drawable", getPackageName());
         articleImageView.setImageResource(imageResource);
@@ -212,9 +135,5 @@ public class MainActivity extends AppCompatActivity implements ArticleManager.On
 
         // Mettre à jour la sélection du Spinner en fonction de la quantité actuelle de l'article
         quantiteSpinner.setSelection(article.getQuantite() - 1);
-
-
-
-
     }
 }

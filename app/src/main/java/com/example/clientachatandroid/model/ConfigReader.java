@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class ConfigReader {
 
-    private Properties properties;
+    private final Properties properties;
 
     public ConfigReader(Context context) {
         properties = new Properties();

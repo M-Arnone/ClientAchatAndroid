@@ -82,6 +82,18 @@ public class Model {
         }
     }
 
+    public void getCaddie() throws IOException {
+        setRequete("CADDIE");
+        String reponse = Echange(getRequete());
+        System.out.println(reponse);
+        String[] mots = reponse.split("#");
+        panier.clear();
+        for (int i = 1; i < mots.length; i += 4) {
+            panier.add(new Article(Integer.parseInt(mots[i]), mots[i + 1], Double.parseDouble(mots[i + 2]), Integer.parseInt(mots[i + 3])));
+        }
+        System.out.println(panier);
+    }
+
     public void on_pushLogin(String nom, String pwd, boolean newClient) throws IOException {
         if (newClient)
             setRequete("LOGIN#" + nom + "#" + pwd + "#1");
@@ -120,7 +132,7 @@ public class Model {
 
     }
 
-    public void on_pushSupprimerArticle(int id) throws IOException {
+    public boolean on_pushSupprimerArticle(int id) throws IOException {
         setRequete("CANCEL#" + id);
         String reponse = Echange(getRequete());
         String[] mots = reponse.split("#");
@@ -128,31 +140,39 @@ public class Model {
             for (Article artPass : getPanier()) {
                 if (artPass.getId() == id) {
                     getPanier().remove(artPass);
-                    return;
+                    return true;
                 }
             }
-        } else System.out.println("Erreur de suppression!!!");
+        } else {
+            System.out.println("Erreur de suppression!!!");
+            return false;
+        }
 
+        return false;
     }
 
-    public void on_pushViderPanier() throws IOException {
+    public boolean on_pushViderPanier() throws IOException {
         setRequete("CANCELALL");
         String reponse = Echange(getRequete());
         String[] mots = reponse.split("#");
         if (mots[1].equals("ok")) {
             getPanier().clear();
             System.out.println("CANCELALL_OK");
+            return true;
         }
+        return false;
     }
 
-    public void on_pushPayer(String total) throws IOException {
+    public boolean on_pushPayer(String total) throws IOException {
         setRequete("CONFIRMER#" + numClient + "#" + total);
         String reponse = Echange(getRequete());
         String[] mots = reponse.split("#");
         if (mots[1].equals("ok")) {
             getPanier().clear();
             System.out.println("Confirm_OK");
+            return true;
         }
+        return false;
     }
 
     private String Echange(String requete) throws IOException {
