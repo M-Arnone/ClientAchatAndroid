@@ -11,6 +11,9 @@
     <string name="empty_cart">Vider le panier</string>
     <string name="pay">Payer</string>
     <string name="logout">Déconnexion</string>
+    <string name="username_hint">Nom d\'utilisateur</string>
+    <string name="password_hint">Mot de passe</string>
+    <string name="login">Se Connecter</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris volutpat, dolor id
